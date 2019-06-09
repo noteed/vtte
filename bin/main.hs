@@ -14,6 +14,7 @@ main = do
   case args of
     [fn] -> do
       initialize
+      setSyntaxHighlighting fn
       kilo fn
     _ -> do
       putStrLn "Usage: vtte <filename>"
@@ -31,3 +32,11 @@ kilo fn = withCString fn c_kilo
 -- terminal width and height.
 foreign import ccall unsafe "initEditor"
   initialize :: IO ()
+
+-- Modify the editor state to setup the syntax highlighting scheme, based on
+-- the given filename.
+setSyntaxHighlighting :: String -> IO ()
+setSyntaxHighlighting fn = withCString fn c_setSyntaxHighlighting
+
+foreign import ccall unsafe "editorSelectSyntaxHighlight"
+  c_setSyntaxHighlighting :: CString -> IO ()

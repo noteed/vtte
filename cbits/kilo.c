@@ -1258,7 +1258,6 @@ void initEditor(void) {
 }
 
 int kilo(char *filename) {
-    editorSelectSyntaxHighlight(filename);
     editorOpen(filename);
     enableRawMode(STDIN_FILENO);
     editorSetStatusMessage(
