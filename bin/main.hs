@@ -23,16 +23,18 @@ main = do
 
 
 ------------------------------------------------------------------------------
+kilo :: String -> IO ()
+kilo fn = withCString fn c_kilo
+
 foreign import ccall unsafe "kilo"
   c_kilo :: CString -> IO ()
 
-kilo :: String -> IO ()
-kilo fn = withCString fn c_kilo
 
 -- Initialize the editor state. In particular, query the system to obtain the
 -- terminal width and height.
 foreign import ccall unsafe "initEditor"
   initialize :: IO ()
+
 
 -- Modify the editor state to setup the syntax highlighting scheme, based on
 -- the given filename.
@@ -41,6 +43,7 @@ setSyntaxHighlighting fn = withCString fn c_setSyntaxHighlighting
 
 foreign import ccall unsafe "editorSelectSyntaxHighlight"
   c_setSyntaxHighlighting :: CString -> IO ()
+
 
 -- Load a file into the editor state.
 loadFile :: String -> IO ()
