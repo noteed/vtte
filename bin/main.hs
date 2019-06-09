@@ -1,6 +1,7 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 module Main (main) where
 
+import Control.Monad (forever)
 import Foreign.C.String (withCString, CString)
 import Foreign.C.Types
 import System.Environment (getArgs)
@@ -18,20 +19,13 @@ main = do
       loadFile fn
       enableRawMode 0 -- stdin
       setStatusMessage "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find"
-      kilo fn
+      forever (refresh >> processKeypress 0) -- stdin
     _ -> do
       putStrLn "Usage: vtte <filename>"
       exitFailure
 
 
 ------------------------------------------------------------------------------
-kilo :: String -> IO ()
-kilo fn = withCString fn c_kilo
-
-foreign import ccall unsafe "kilo"
-  c_kilo :: CString -> IO ()
-
-
 -- Initialize the editor state. In particular, query the system to obtain the
 -- terminal width and height.
 foreign import ccall unsafe "initEditor"
@@ -67,3 +61,13 @@ setStatusMessage fmt = withCString fmt c_setStatusMessage
 
 foreign import ccall unsafe "editorSetStatusMessage"
   c_setStatusMessage :: CString -> IO ()
+
+
+-- Redraw the whole screen.
+foreign import ccall unsafe "editorRefreshScreen"
+  refresh :: IO ()
+
+
+-- Process one key press.
+foreign import ccall unsafe "editorProcessKeypress"
+  processKeypress :: Int -> IO ()

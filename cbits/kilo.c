@@ -1,7 +1,6 @@
 /* This is the original kilo.c file with some modifications:
  *
- * - The main() function is renamed kilo(), and called from Haskell.
- * - The initEditor() function is called from Haskell (instead of kilo()).
+ * - The main() function is removed, and implemented in Haskell.
  *
  * Kilo -- A very simple editor in less than 1-kilo lines of code (as counted
  *         by "cloc"). Does not depend on libcurses, directly emits VT100
@@ -1255,12 +1254,4 @@ void initEditor(void) {
         exit(1);
     }
     E.screenrows -= 2; /* Get room for status bar. */
-}
-
-int kilo(char *filename) {
-    while(1) {
-        editorRefreshScreen();
-        editorProcessKeypress(STDIN_FILENO);
-    }
-    return 0;
 }
