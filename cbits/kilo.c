@@ -1,4 +1,7 @@
-/* Kilo -- A very simple editor in less than 1-kilo lines of code (as counted
+/* This is the original kilo.c file with a modification:
+ * The main() function is replaced by a kilo() function.
+ *
+ * Kilo -- A very simple editor in less than 1-kilo lines of code (as counted
  *         by "cloc"). Does not depend on libcurses, directly emits VT100
  *         escapes on the terminal.
  *
@@ -1252,15 +1255,11 @@ void initEditor(void) {
     E.screenrows -= 2; /* Get room for status bar. */
 }
 
-int main(int argc, char **argv) {
-    if (argc != 2) {
-        fprintf(stderr,"Usage: kilo <filename>\n");
-        exit(1);
-    }
-
+int kilo() {
+    char *filename = "hello.txt";
     initEditor();
-    editorSelectSyntaxHighlight(argv[1]);
-    editorOpen(argv[1]);
+    editorSelectSyntaxHighlight(filename);
+    editorOpen(filename);
     enableRawMode(STDIN_FILENO);
     editorSetStatusMessage(
         "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find");
