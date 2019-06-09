@@ -1,5 +1,7 @@
-/* This is the original kilo.c file with a modification:
- * The main() function is replaced by a kilo() function.
+/* This is the original kilo.c file with some modifications:
+ *
+ * - The main() function is renamed kilo(), and called from Haskell.
+ * - The initEditor() function is called from Haskell (instead of kilo()).
  *
  * Kilo -- A very simple editor in less than 1-kilo lines of code (as counted
  *         by "cloc"). Does not depend on libcurses, directly emits VT100
@@ -1256,7 +1258,6 @@ void initEditor(void) {
 }
 
 int kilo(char *filename) {
-    initEditor();
     editorSelectSyntaxHighlight(filename);
     editorOpen(filename);
     enableRawMode(STDIN_FILENO);
