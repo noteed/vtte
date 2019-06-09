@@ -16,6 +16,7 @@ main = do
       initialize
       setSyntaxHighlighting fn
       loadFile fn
+      enableRawMode 0 -- stdin
       kilo fn
     _ -> do
       putStrLn "Usage: vtte <filename>"
@@ -51,3 +52,7 @@ loadFile fn = withCString fn c_loadFile
 
 foreign import ccall unsafe "editorOpen"
   c_loadFile :: CString -> IO ()
+
+-- Set terminal to raw mode.
+foreign import ccall unsafe "enableRawMode"
+  enableRawMode :: Int -> IO ()
