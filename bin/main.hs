@@ -3,12 +3,19 @@ module Main (main) where
 
 import Foreign.C.String (withCString, CString)
 import Foreign.C.Types
+import System.Environment (getArgs)
+import System.Exit (exitFailure)
 
 
 ------------------------------------------------------------------------------
 main :: IO ()
 main = do
-  kilo "hello.txt"
+  args <- getArgs
+  case args of
+    [fn] -> kilo fn
+    _ -> do
+      putStrLn "Usage: vtte <filename>"
+      exitFailure
 
 
 ------------------------------------------------------------------------------
