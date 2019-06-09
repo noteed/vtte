@@ -1258,8 +1258,6 @@ void initEditor(void) {
 }
 
 int kilo(char *filename) {
-    editorSetStatusMessage(
-        "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find");
     while(1) {
         editorRefreshScreen();
         editorProcessKeypress(STDIN_FILENO);

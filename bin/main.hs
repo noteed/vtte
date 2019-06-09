@@ -17,6 +17,7 @@ main = do
       setSyntaxHighlighting fn
       loadFile fn
       enableRawMode 0 -- stdin
+      setStatusMessage "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find"
       kilo fn
     _ -> do
       putStrLn "Usage: vtte <filename>"
@@ -53,6 +54,16 @@ loadFile fn = withCString fn c_loadFile
 foreign import ccall unsafe "editorOpen"
   c_loadFile :: CString -> IO ()
 
+
 -- Set terminal to raw mode.
 foreign import ccall unsafe "enableRawMode"
   enableRawMode :: Int -> IO ()
+
+
+-- Write a string to the status line.
+-- In C, this uses a va_list to format a number of arguments.
+setStatusMessage :: String -> IO ()
+setStatusMessage fmt = withCString fmt c_setStatusMessage
+
+foreign import ccall unsafe "editorSetStatusMessage"
+  c_setStatusMessage :: CString -> IO ()
