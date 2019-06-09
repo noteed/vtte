@@ -1,0 +1,18 @@
+name:                vtte
+version:             0.0.0
+Cabal-Version:       >= 1.8
+synopsis:            A text editor
+description:         Vtte is a text editor.
+category:            System
+license:             BSD2
+license-file:        LICENSE
+author:              Vo Minh Thu
+maintainer:          thu@hypered.io
+build-type:          Simple
+
+executable vtte
+  hs-source-dirs:      bin
+  c-sources:           cbits/kilo.c
+  main-is:             main.hs
+  build-depends:       base == 4.*
+  ghc-options:         -Wall
