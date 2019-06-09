@@ -1255,8 +1255,7 @@ void initEditor(void) {
     E.screenrows -= 2; /* Get room for status bar. */
 }
 
-int kilo() {
-    char *filename = "hello.txt";
+int kilo(char *filename) {
     initEditor();
     editorSelectSyntaxHighlight(filename);
     editorOpen(filename);
