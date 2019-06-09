@@ -598,7 +598,7 @@ void editorFreeRow(erow *row) {
     free(row->hl);
 }
 
-/* Remove the row at the specified position, shifting the remainign on the
+/* Remove the row at the specified position, shifting the remaining on the
  * top. */
 void editorDelRow(int at) {
     erow *row;
@@ -614,7 +614,7 @@ void editorDelRow(int at) {
 
 /* Turn the editor rows into a single heap-allocated string.
  * Returns the pointer to the heap-allocated string and populate the
- * integer pointed by 'buflen' with the size of the string, escluding
+ * integer pointed by 'buflen' with the size of the string, excluding
  * the final nulterm. */
 char *editorRowsToString(int *buflen) {
     char *buf = NULL, *p;
@@ -874,7 +874,7 @@ void editorRefreshScreen(void) {
             if (E.numrows == 0 && y == E.screenrows/3) {
                 char welcome[80];
                 int welcomelen = snprintf(welcome,sizeof(welcome),
-                    "Kilo editor -- verison %s\x1b[0K\r\n", KILO_VERSION);
+                    "Kilo editor -- version %s\x1b[0K\r\n", KILO_VERSION);
                 int padding = (E.screencols-welcomelen)/2;
                 if (padding) {
                     abAppend(&ab,"~",1);
