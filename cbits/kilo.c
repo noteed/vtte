@@ -1258,7 +1258,6 @@ void initEditor(void) {
 }
 
 int kilo(char *filename) {
-    editorOpen(filename);
     enableRawMode(STDIN_FILENO);
     editorSetStatusMessage(
         "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find");

@@ -15,6 +15,7 @@ main = do
     [fn] -> do
       initialize
       setSyntaxHighlighting fn
+      loadFile fn
       kilo fn
     _ -> do
       putStrLn "Usage: vtte <filename>"
@@ -40,3 +41,10 @@ setSyntaxHighlighting fn = withCString fn c_setSyntaxHighlighting
 
 foreign import ccall unsafe "editorSelectSyntaxHighlight"
   c_setSyntaxHighlighting :: CString -> IO ()
+
+-- Load a file into the editor state.
+loadFile :: String -> IO ()
+loadFile fn = withCString fn c_loadFile
+
+foreign import ccall unsafe "editorOpen"
+  c_loadFile :: CString -> IO ()
