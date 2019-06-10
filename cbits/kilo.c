@@ -1,6 +1,9 @@
 /* This is the original kilo.c file with some modifications:
  *
  * - The main() function is removed, and implemented in Haskell.
+ * - Some fd parameters are hard-coded to STDIN_FILENO.
+ * - The keypress processing function doesn't call the editorReadKey function
+ *   but gets the key as parameter.
  *
  * Kilo -- A very simple editor in less than 1-kilo lines of code (as counted
  *         by "cloc"). Does not depend on libcurses, directly emits VT100
@@ -240,7 +243,8 @@ fatal:
 
 /* Read a key from the terminal put in raw mode, trying to handle
  * escape sequences. */
-int editorReadKey(int fd) {
+int editorReadKey() {
+    int fd = STDIN_FILENO;
     int nread;
     char c, seq[3];
     while ((nread = read(fd,&c,1)) == 0);
@@ -991,7 +995,7 @@ void editorSetStatusMessage(const char *fmt, ...) {
 
 #define KILO_QUERY_LEN 256
 
-void editorFind(int fd) {
+void editorFind() {
     char query[KILO_QUERY_LEN+1] = {0};
     int qlen = 0;
     int last_match = -1; /* Last line where a match was found. -1 for none. */
@@ -1015,7 +1019,7 @@ void editorFind(int fd) {
             "Search: %s (Use ESC/Arrows/Enter)", query);
         editorRefreshScreen();
 
-        int c = editorReadKey(fd);
+        int c = editorReadKey();
         if (c == DEL_KEY || c == CTRL_H || c == BACKSPACE) {
             if (qlen != 0) query[--qlen] = '\0';
             last_match = -1;
@@ -1164,12 +1168,11 @@ void editorMoveCursor(int key) {
 /* Process events arriving from the standard input, which is, the user
  * is typing stuff on the terminal. */
 #define KILO_QUIT_TIMES 3
-void editorProcessKeypress(int fd) {
+void editorProcessKeypress(int c) {
     /* When the file is modified, requires Ctrl-q to be pressed N times
      * before actually quitting. */
     static int quit_times = KILO_QUIT_TIMES;
 
-    int c = editorReadKey(fd);
     switch(c) {
     case ENTER:         /* Enter */
         editorInsertNewline();
@@ -1192,7 +1195,7 @@ void editorProcessKeypress(int fd) {
         editorSave();
         break;
     case CTRL_F:
-        editorFind(fd);
+        editorFind();
         break;
     case BACKSPACE:     /* Backspace */
     case CTRL_H:        /* Ctrl-h */

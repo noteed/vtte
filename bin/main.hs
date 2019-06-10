@@ -21,7 +21,7 @@ main = do
       enableRawMode 0 -- stdin
       setStatusMessage "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find"
       refresh'
-      forever (processKeypress 0 >> refresh) -- stdin
+      forever (readKeypress >>= processKeypress >> refresh)
     _ -> do
       putStrLn "Usage: vtte <filename>"
       exitFailure
@@ -86,6 +86,9 @@ foreign import ccall unsafe "editorSetStatusMessage"
 foreign import ccall unsafe "editorRefreshScreen"
   refresh :: IO ()
 
+-- Read a key, which can be processed by `processKeypress`.
+foreign import ccall unsafe "editorReadKey"
+  readKeypress :: IO Int
 
 -- Process one key press.
 foreign import ccall unsafe "editorProcessKeypress"
