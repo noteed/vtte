@@ -1,7 +1,6 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 module Main (main) where
 
-import Control.Monad (forever)
 import Foreign.C.String (withCString, CString)
 import Foreign.C.Types
 import System.Environment (getArgs)
@@ -21,10 +20,16 @@ main = do
       enableRawMode 0 -- stdin
       setStatusMessage "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find"
       refresh'
-      forever (readKeypress >>= processKeypress >> refresh)
+      loop
     _ -> do
       putStrLn "Usage: vtte <filename>"
       exitFailure
+
+loop = do
+  k <- readKeypress
+  processKeypress k
+  refresh
+  loop
 
 
 ------------------------------------------------------------------------------
@@ -68,7 +73,8 @@ foreign import ccall unsafe "editorOpen"
   c_loadFile :: CString -> IO ()
 
 
--- Set terminal to raw mode.
+-- Set terminal to raw mode. This also registers an atexit handler to disable
+-- raw mode.
 foreign import ccall unsafe "enableRawMode"
   enableRawMode :: Int -> IO ()
 
@@ -97,3 +103,7 @@ foreign import ccall unsafe "editorProcessKeypress"
 
 foreign import ccall unsafe "getScreenHeight"
   getScreenHeight :: IO Int
+
+
+------------------------------------------------------------------------------
+ctrl_q = 17
