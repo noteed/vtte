@@ -4,7 +4,7 @@ module Main (main) where
 import Foreign.C.String (withCString, CString)
 import Foreign.C.Types
 import System.Environment (getArgs)
-import System.Exit (exitFailure)
+import System.Exit (exitFailure, exitSuccess)
 import System.IO (hFlush, stdout)
 
 
@@ -27,9 +27,14 @@ main = do
 
 loop = do
   k <- readKeypress
-  processKeypress k
-  refresh
-  loop
+  if k == ctrl_c
+    then do
+      refresh'
+      exitSuccess
+    else do
+      processKeypress k
+      refresh
+      loop
 
 
 ------------------------------------------------------------------------------
@@ -106,4 +111,5 @@ foreign import ccall unsafe "getScreenHeight"
 
 
 ------------------------------------------------------------------------------
+ctrl_c = 3
 ctrl_q = 17
