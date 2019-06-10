@@ -1236,10 +1236,6 @@ void editorProcessKeypress(int c) {
     quit_times = KILO_QUIT_TIMES; /* Reset it to the original value. */
 }
 
-int editorFileWasModified(void) {
-    return E.dirty;
-}
-
 void initEditor(void) {
     E.cx = 0;
     E.cy = 0;
