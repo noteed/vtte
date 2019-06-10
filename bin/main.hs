@@ -6,6 +6,7 @@ import Foreign.C.String (withCString, CString)
 import Foreign.C.Types
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
+import System.IO (hFlush, stdout)
 
 
 ------------------------------------------------------------------------------
@@ -19,10 +20,28 @@ main = do
       loadFile fn
       enableRawMode 0 -- stdin
       setStatusMessage "HELP: Ctrl-S = save | Ctrl-Q = quit | Ctrl-F = find"
-      forever (refresh >> processKeypress 0) -- stdin
+      refresh'
+      forever (processKeypress 0 >> refresh) -- stdin
     _ -> do
       putStrLn "Usage: vtte <filename>"
       exitFailure
+
+
+------------------------------------------------------------------------------
+refresh' = do
+  h <- getScreenHeight
+  putStr "\x1b[?25l"  -- Hide cursor.
+  putStr "\x1b[H"     -- Go to upper left.
+  putStr "        Vtte editor -- version 0.0.0\x1b[0K\r\n"
+  mapM_ (\_ -> putStr "~\x1b[0K\r\n") [2 .. h-1]
+  putStr "~\x1b[0K"   -- Last line, don't \r\n.
+  putStr "\x1b[H"
+  putStr "\x1b[?25h"  -- Show cursor.
+  hFlush stdout
+  --
+  -- Is it possible (or necessary) to  use a single write() for performance or
+  -- to avoid glitches ?
+  -- Or is the Haskell buffer management with putStr + hFlush good enough ?
 
 
 ------------------------------------------------------------------------------
@@ -71,3 +90,7 @@ foreign import ccall unsafe "editorRefreshScreen"
 -- Process one key press.
 foreign import ccall unsafe "editorProcessKeypress"
   processKeypress :: Int -> IO ()
+
+
+foreign import ccall unsafe "getScreenHeight"
+  getScreenHeight :: IO Int

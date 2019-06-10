@@ -1255,3 +1255,9 @@ void initEditor(void) {
     }
     E.screenrows -= 2; /* Get room for status bar. */
 }
+
+/* ========================== Helpers for Haskell  ========================== */
+
+int getScreenHeight() {
+    return E.screenrows + 2; /* Inlcude status bar. */
+}
