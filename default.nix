@@ -1,11 +1,8 @@
-{ mkDerivation, base, stdenv }:
-mkDerivation {
-  pname = "vtte";
-  version = "0.0.0";
-  src = ./.;
-  isLibrary = false;
-  isExecutable = true;
-  executableHaskellDepends = [ base ];
-  description = "A text editor";
-  license = stdenv.lib.licenses.bsd3;
+let
+  pkgs = import <nixpkgs> {
+  };
+  hspkgs = pkgs.haskell.packages.ghc843;
+in
+{
+  vtte = hspkgs.callPackage ./derivation.nix {};
 }
